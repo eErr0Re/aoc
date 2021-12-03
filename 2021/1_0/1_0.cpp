@@ -1,11 +1,10 @@
 #include <iostream>
 #include <fstream>
-#include <vector>
 using namespace std;
 
 int main()
 {
-    ifstream in = ifstream("input.txt");
+    ifstream in("input.txt");
     int prev, current;
     in >> prev;
     int count = 0;
@@ -15,5 +14,5 @@ int main()
             ++count;
         prev = current;
     }
-    cout << count << '\n';
+    cout << count << endl;
 }

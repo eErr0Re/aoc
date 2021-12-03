@@ -9,7 +9,7 @@ int main()
     string direction;
     int val;
 
-    while (in >> direction, in >> val)
+    while (in >> direction >> val)
     {
         if (direction == "forward")
         {
