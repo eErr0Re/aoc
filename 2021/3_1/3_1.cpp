@@ -16,7 +16,9 @@ int main()
         co2.push_back(number);
     }
 
-    for (int i = 0; i < 12 && (oxygen.size() != 1 || co2.size() != 1); ++i)
+    int length = oxygen[0].size();
+
+    for (int i = 0; i < length && (oxygen.size() != 1 || co2.size() != 1); ++i)
     {
         vector<string> next;
 
