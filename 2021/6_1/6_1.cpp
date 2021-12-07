@@ -5,7 +5,7 @@
 #include <set>
 using namespace std;
 
-int DAYS = 256;
+const int DAYS = 256;
 
 void count(int, map<int, size_t> &, map<int, size_t> &);
 
