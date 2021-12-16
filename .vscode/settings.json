@@ -43,6 +43,7 @@
         "xutility": "cpp",
         "chrono": "cpp",
         "unordered_map": "cpp",
-        "queue": "cpp"
+        "queue": "cpp",
+        "numeric": "cpp"
     }
 }
