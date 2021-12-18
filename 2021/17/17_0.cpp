@@ -1,8 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <chrono>
-#include <set>
+#include <unordered_set>
 #include <cmath>
+#include <algorithm>
 using namespace std;
 
 int main()
@@ -17,8 +18,7 @@ int main()
     in >> x1 >> c >> c >> x2 >> c >> c >> c;
     in >> y1 >> c >> c >> y2;
 
-    set<int> possible_x;
-    set<int> possible_y;
+    unordered_set<int> possible_y;
 
     for (int i = y1; i <= y2; ++i)
     {
@@ -34,7 +34,7 @@ int main()
         }
     }
 
-    int y = *possible_y.crbegin();
+    int y = *max_element(possible_y.cbegin(), possible_y.cend());
     cout << y * (y + 1) / 2 << endl;
     auto end = chrono::steady_clock::now();
     cout << "Runtime: " << chrono::duration_cast<chrono::milliseconds>(end - start).count() << " ms\n";
