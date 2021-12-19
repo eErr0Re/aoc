@@ -45,6 +45,11 @@
         "unordered_map": "cpp",
         "queue": "cpp",
         "numeric": "cpp",
-        "xhash": "cpp"
+        "xhash": "cpp",
+        "unordered_set": "cpp",
+        "deque": "cpp",
+        "list": "cpp",
+        "stack": "cpp",
+        "xtree": "cpp"
     }
 }

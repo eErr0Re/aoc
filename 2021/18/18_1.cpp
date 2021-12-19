@@ -43,22 +43,22 @@ int main()
 string add(const string &p1, const string &p2)
 {
     string res = "[" + p1 + "," + p2 + "]";
-    int parens = 0;
+    int brackets = 0;
 
     // Explode
     for (size_t i = 0, prev = string::npos; i < res.size(); ++i)
     {
         if (res[i] == '[')
-            ++parens;
+            ++brackets;
         else if (res[i] == ']')
-            --parens;
+            --brackets;
         else if (res[i] != ',' && i != prev + 1)
             prev = i;
 
-        if (parens == 5)
+        if (brackets == 5)
         {
             i = explode(res, i, prev);
-            --parens;
+            --brackets;
             prev = i;
         }
     }
@@ -67,9 +67,9 @@ string add(const string &p1, const string &p2)
     for (size_t i = 0; i < res.size(); ++i)
     {
         if (res[i] == '[')
-            ++parens;
+            ++brackets;
         else if (res[i] == ']')
-            --parens;
+            --brackets;
         else if (res[i] != ',')
         {
             auto end = res.find_first_of("[],", i);
@@ -78,10 +78,10 @@ string add(const string &p1, const string &p2)
                 continue;
 
             res.replace(i, end - i, "[" + to_string(val / 2) + "," + to_string((int) ceil(val / 2.0)) + "]");
-            ++parens;
+            ++brackets;
 
             // Explode
-            if (parens == 5)
+            if (brackets == 5)
             {
                 auto prev_end = res.find_last_not_of("[],", i);
 
@@ -98,11 +98,11 @@ string add(const string &p1, const string &p2)
                     if (stoi(res.substr(prev_start, prev_end - prev_start)) >= 10)
                     {
                         i = -1;
-                        parens = 1;
+                        brackets = 1;
                     }
                 }
 
-                --parens;
+                --brackets;
             }
         }
     }
