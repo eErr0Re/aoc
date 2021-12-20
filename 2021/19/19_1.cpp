@@ -7,35 +7,6 @@
 #include <unordered_set>
 using namespace std;
 
-// sry :(
-const int DIR[24][6] =
-{
-    { 0, 1, 2, 1, 1, 1 },
-    { 0, 1, 2, 1, -1, -1 },
-    { 0, 1, 2, -1, 1, -1 },
-    { 0, 1, 2, -1, -1, 1 },
-    { 0, 2, 1, 1, -1, 1 },
-    { 0, 2, 1, 1, 1, -1 },
-    { 0, 2, 1, -1, -1, -1 },
-    { 0, 2, 1, -1, 1, 1 },
-    { 1, 0, 2, -1, 1, 1 },
-    { 1, 0, 2, -1, -1, -1 },
-    { 1, 0, 2, 1, 1, -1 },
-    { 1, 0, 2, 1, -1, 1 },
-    { 1, 2, 0, 1, -1, -1 },
-    { 1, 2, 0, 1, 1, 1 },
-    { 1, 2, 0, -1, -1, 1 },
-    { 1, 2, 0, -1, 1, -1 },
-    { 2, 0, 1, 1, -1, -1 },
-    { 2, 0, 1, 1, 1, 1 },
-    { 2, 0, 1, -1, -1, 1 },
-    { 2, 0, 1, -1, 1, -1 },
-    { 2, 1, 0, 1, 1, -1 },
-    { 2, 1, 0, 1, -1, 1 },
-    { 2, 1, 0, -1, 1, 1 },
-    { 2, 1, 0, -1, -1, -1 }
-};
-
 struct position
 {
     int x, y, z;
@@ -113,31 +84,60 @@ int main()
 
 bool findOverlap(pair<unordered_set<position>, unordered_set<position>> &absolute, const pair<unordered_set<position>, unordered_set<position>> &relative)
 {
-    for (auto it = absolute.first.begin(); it != absolute.first.end(); ++it)
+    // sry :(
+    static const int dir[24][6] =
+    {
+        { 0, 1, 2, 1, 1, 1 },
+        { 0, 1, 2, 1, -1, -1 },
+        { 0, 1, 2, -1, 1, -1 },
+        { 0, 1, 2, -1, -1, 1 },
+        { 0, 2, 1, 1, -1, 1 },
+        { 0, 2, 1, 1, 1, -1 },
+        { 0, 2, 1, -1, -1, -1 },
+        { 0, 2, 1, -1, 1, 1 },
+        { 1, 0, 2, -1, 1, 1 },
+        { 1, 0, 2, -1, -1, -1 },
+        { 1, 0, 2, 1, 1, -1 },
+        { 1, 0, 2, 1, -1, 1 },
+        { 1, 2, 0, 1, -1, -1 },
+        { 1, 2, 0, 1, 1, 1 },
+        { 1, 2, 0, -1, -1, 1 },
+        { 1, 2, 0, -1, 1, -1 },
+        { 2, 0, 1, 1, -1, -1 },
+        { 2, 0, 1, 1, 1, 1 },
+        { 2, 0, 1, -1, -1, 1 },
+        { 2, 0, 1, -1, 1, -1 },
+        { 2, 1, 0, 1, 1, -1 },
+        { 2, 1, 0, 1, -1, 1 },
+        { 2, 1, 0, -1, 1, 1 },
+        { 2, 1, 0, -1, -1, -1 }
+    };
+
+    for (const position &abs : absolute.first)
     {
         for (int i = 0; i < 24; ++i)
         {
-            for (position p : relative.first)
+            for (position offset : relative.first)
             {
                 int count = 0;
-                auto offset = p;
-                int x = DIR[i][0] == 0 ? p.x : (DIR[i][0] == 1 ? p.y : p.z);
-                int y = DIR[i][1] == 0 ? p.x : (DIR[i][1] == 1 ? p.y : p.z);
-                int z = DIR[i][2] == 0 ? p.x : (DIR[i][2] == 1 ? p.y : p.z);
-                offset.x =  DIR[i][3] * x - (*it).x;
-                offset.y = DIR[i][4] * y - (*it).y;
-                offset.z = DIR[i][5] * z - (*it).z;
 
-                for (position p : relative.first)
+                int x = dir[i][0] == 0 ? offset.x : (dir[i][0] == 1 ? offset.y : offset.z);
+                int y = dir[i][1] == 0 ? offset.x : (dir[i][1] == 1 ? offset.y : offset.z);
+                int z = dir[i][2] == 0 ? offset.x : (dir[i][2] == 1 ? offset.y : offset.z);
+
+                offset.x =  dir[i][3] * x - abs.x;
+                offset.y = dir[i][4] * y - abs.y;
+                offset.z = dir[i][5] * z - abs.z;
+
+                for (position pos : relative.first)
                 {
-                    auto pos = p;
-                    int x = DIR[i][0] == 0 ? p.x : (DIR[i][0] == 1 ? p.y : p.z);
-                    int y = DIR[i][1] == 0 ? p.x : (DIR[i][1] == 1 ? p.y : p.z);
-                    int z = DIR[i][2] == 0 ? p.x : (DIR[i][2] == 1 ? p.y : p.z);
+                    int x = dir[i][0] == 0 ? pos.x : (dir[i][0] == 1 ? pos.y : pos.z);
+                    int y = dir[i][1] == 0 ? pos.x : (dir[i][1] == 1 ? pos.y : pos.z);
+                    int z = dir[i][2] == 0 ? pos.x : (dir[i][2] == 1 ? pos.y : pos.z);
                     
-                    pos.x = DIR[i][3] * x - offset.x;
-                    pos.y = DIR[i][4] * y - offset.y;
-                    pos.z = DIR[i][5] * z - offset.z;
+                    pos.x = dir[i][3] * x - offset.x;
+                    pos.y = dir[i][4] * y - offset.y;
+                    pos.z = dir[i][5] * z - offset.z;
                     
                     if (absolute.first.find(pos) != absolute.first.end())
                         ++count;
@@ -145,16 +145,15 @@ bool findOverlap(pair<unordered_set<position>, unordered_set<position>> &absolut
 
                 if (count >= 12)
                 {  
-                    for (position p : relative.first)
+                    for (position pos : relative.first)
                     {
-                        auto pos = p;
-                        int x = DIR[i][0] == 0 ? p.x : (DIR[i][0] == 1 ? p.y : p.z);
-                        int y = DIR[i][1] == 0 ? p.x : (DIR[i][1] == 1 ? p.y : p.z);
-                        int z = DIR[i][2] == 0 ? p.x : (DIR[i][2] == 1 ? p.y : p.z);
+                        int x = dir[i][0] == 0 ? pos.x : (dir[i][0] == 1 ? pos.y : pos.z);
+                        int y = dir[i][1] == 0 ? pos.x : (dir[i][1] == 1 ? pos.y : pos.z);
+                        int z = dir[i][2] == 0 ? pos.x : (dir[i][2] == 1 ? pos.y : pos.z);
                         
-                        pos.x = DIR[i][3] * x - offset.x;
-                        pos.y = DIR[i][4] * y - offset.y;
-                        pos.z = DIR[i][5] * z - offset.z;
+                        pos.x = dir[i][3] * x - offset.x;
+                        pos.y = dir[i][4] * y - offset.y;
+                        pos.z = dir[i][5] * z - offset.z;
 
                         absolute.first.insert(pos);
                     }
