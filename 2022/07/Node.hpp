@@ -4,6 +4,8 @@
 #include <unordered_map>
 #include <string>
 
+class Directory;
+
 class Node
 {
 public:
@@ -12,36 +14,47 @@ public:
     Node() :
         Node("") {}
 
-    explicit Node(std::string_view name, size_type size = 0, bool file = false, Node *parent = nullptr) :
-        m_name {name}, m_size {size}, m_file {file}, m_parent {parent} {}
+    explicit Node(std::string_view name, size_type size = 0, Directory *parent = nullptr) :
+        m_name {name}, m_size {size}, m_parent {parent} {}
 
     size_type getSize() const noexcept
     {
         return m_size;
     }
 
-    Node *getDirectory(std::string_view name)
+protected:
+    std::string m_name;
+    size_type m_size;
+    Directory *m_parent;
+};
+
+class Directory : public Node
+{
+public:
+    using Node::Node;
+
+    Directory *getDirectory(std::string_view name)
     {
         if (name == "..")
             return m_parent;
 
-        return &(m_directories[name.data()]);
+        if (m_directories.contains(name.data()))
+            return &m_directories[name.data()];
+
+        return nullptr;
     }
 
-    const std::unordered_map<std::string, Node> &getDirectories() const noexcept
+    const std::unordered_map<std::string, Directory> &getDirectories() const noexcept
     {
         return m_directories;
     }
 
     size_type calculateSize()
     {
-        if (m_file)
-            return m_size;
-
         size_type size {};
 
         for (auto &file : m_files)
-            size += file.second.calculateSize();
+            size += file.second.getSize();
 
         for (auto &dir : m_directories)
             size += dir.second.calculateSize();
@@ -52,21 +65,17 @@ public:
 
     void addDirectory(std::string_view name)
     {
-        m_directories.try_emplace(name.data(), name, 0, false, this);
+        m_directories.try_emplace(name.data(), name, 0, this);
     }
 
     void addFile(std::string_view name, size_type size)
     {
-        m_files.try_emplace(name.data(), name, size, true, this);
+        m_files.try_emplace(name.data(), name, size, this);
     }
 
 private:
-    std::string m_name;
-    size_type m_size;
-    bool m_file;
     std::unordered_map<std::string, Node> m_files;
-    std::unordered_map<std::string, Node> m_directories;
-    Node *m_parent;
+    std::unordered_map<std::string, Directory> m_directories;
 };
 
 #endif

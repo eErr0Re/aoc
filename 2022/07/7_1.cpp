@@ -11,8 +11,8 @@ int main()
     std::ifstream in {"input.txt"};
     std::string word;
 
-    Node root {"/"};
-    Node *current_node {&root};
+    Directory root {"/"};
+    Directory *current_node {&root};
 
     getline(in, word);
     while (in >> word)
@@ -52,12 +52,12 @@ int main()
 
     Node::size_type smallest {total_space};
 
-    std::stack<const Node *> to_visit;
+    std::stack<const Directory *> to_visit;
     to_visit.push(&root);
 
     while (!to_visit.empty())
     {
-        const Node *current {to_visit.top()};
+        const Directory *current {to_visit.top()};
         to_visit.pop();
 
         const Node::size_type size {current->getSize()};
